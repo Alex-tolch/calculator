@@ -1,0 +1,27 @@
+
+.main_window{
+    display: flex;
+    flex-direction: column;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+}
+
+.row button {
+    width: 60pt;
+    height: 40pt;
+    font-size: 15pt;
+    margin: 1pt;
+}
+
+.row input {
+    border: 4pt;
+    border-color: black;
+    background-color: rgb(189, 189, 189);
+    width: 240pt;
+    height: 40pt;
+    text-align: right;
+    font-size: 15pt;
+}
