@@ -54,9 +54,14 @@ function display(id){
                 console.log(first+operation+second)
                 break;
             case '/':
-                result_field.value = divide(+first, +second).toString()+el.innerText
-                console.log(first+operation+second)
-                break;
+                if (+second == 0) {
+                    alert('unable divide on 0');
+                    result_field.value = "";
+                } else {
+                    result_field.value = divide(+first, +second).toString()+el.innerText
+                    console.log(first+operation+second)
+                    break;
+                }
           }
     } else {
         result_field.value = result_field.value + el.innerText;
