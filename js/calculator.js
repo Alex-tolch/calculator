@@ -2,71 +2,115 @@ function add(a, b){
     return a + b;
 }
 
-function substract(a, b){
+var substract = function substract(a, b){
     return a - b;
 }
 
-function multiply(a, b){
-    return a * b;
-}
+let multiply = (a,b) => a * b;
 
 function divide(a, b){
     return a/b;
 }
 
-// var substract = function substract(a, b){
-//     return a - b;
-// }
+function sqrt(a){
+    return Math.sqrt(a);
+}
 
-// let multiply = (a,b) => a * b;
+function pow(a, b) {
+    return Math.pow(a, b);
+}
 
-// function divide(a, b){
-//     return a / b;
-// }
+function calculate(expression, last_operation = "") {
+    let first = expression.match(/^\-?\d+/);
+    let second = expression.match(/\d+$/);
+    let operation = expression.match(/(\+|\-|\*|\/|pow)/g).pop();
+    // console.log("operation: "+operation)
+    switch(operation) {
+        case '+':
+            expression = add(+first, +second).toString()+last_operation;
+            console.log(first+operation+second);
+            break;
+        case '-':
+            expression = substract(+first, +second).toString()+last_operation;
+            console.log(first+operation+second);
+            break;
+        case '*':
+            expression = multiply(+first, +second).toString()+last_operation;
+            console.log(first+operation+second);
+            break;
+        case '/':
+            if (+second == 0) {
+                alert('unable divide on 0');
+                expression = "";
+                break;
+            } else {
+                expression = divide(+first, +second).toString()+last_operation;
+                console.log(first+operation+second);
+                break;
+            }
+        case 'pow':
+            expression = pow(+first, +second).toString()+last_operation;
+            console.log(first+operation+second);
+            break;
+        }
+    return expression;
+}
 
-// function get_input_number(){
-    
-// }
+function one_number_calculate(expression, operation, last_operation = "") {
+    let first = expression.match(/^\-?\d+/);
+    switch(operation) {
+        case 'sqrt':
+            if (+first >= 0) {
+                expression = sqrt(+first).toString()+last_operation;
+                console.log(first+'sqrt');
+                break;
+            } else {
+                alert('unable get sqrt of value < 0');
+                break;
+            }
+        }
+    return expression;
+}
+
+function two_number_operation(expression, regex=/\-?[0-9]+(\+|\-|\*|\/|pow)[0-9]+/) {
+    if (expression.match(regex)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function one_number_operation(expression, regex=/\-?[0-9]+/) {
+    if (expression.match(regex)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+
 function display(id){
     let el = document.getElementById(id);
     let result_field = document.getElementById('input_field');
-    if (['+', '-', '*', '/'].includes(result_field.value.slice(-1)) && el.innerText.match(/(\+|\-|\*|\/)/)) {
-        console.log(result_field.value)
+    if (el.innerText.match(/CE/)) {
         result_field.value = result_field.value.slice(0, -1);
-        console.log(result_field.value)
+    } else if (el.innerText.match(/C/)) { ///если нажато удаление текущих вычислений
+        result_field.value = "";
+    } else if (el.innerText.match(/sqrt/)) { // если введено число и нажато вычиление кв корня
+        if (one_number_operation(result_field.value)) {
+            result_field.value = one_number_calculate(result_field.value, el.innerText);
+        }
+    } else if (el.innerText.match(/\=/) && !two_number_operation(result_field.value)) { // если нажато равно и выражение не соответствует: число + операция + число
+        result_field.value = result_field.value;
+    } else if (['+', '-', '*', '/', 'pow'].includes(result_field.value.slice(-1)) && el.innerText.match(/(\+|\-|\*|\/|pow)/)) { // если последний элемент выражения - операция и нажатое значение - операция
+        result_field.value = result_field.value.slice(0, -1);
         result_field.value = result_field.value+el.innerText;
-    } else if (result_field.value.match(/\-?[0-9]+(\+|\-|\*|\/)[0-9]+/) && ['+', '-', '*', '/'].includes(el.innerText)) {
-        let first = result_field.value.match(/^\-?\d+/);
-        let second = result_field.value.match(/\d+$/);
-        let operation = result_field.value.match(/(\+|\-|\*|\/)/g).pop();
-        // console.log("operation: "+operation)
-        switch(operation) {
-            case '+':
-                result_field.value = add(+first, +second).toString()+el.innerText
-                console.log(first+operation+second)
-                break;
-            case '-':
-                result_field.value = substract(+first, +second).toString()+el.innerText
-                console.log(first+operation+second)
-                break;
-            case '*':
-                result_field.value = multiply(+first, +second).toString()+el.innerText
-                console.log(first+operation+second)
-                break;
-            case '/':
-                if (+second == 0) {
-                    alert('unable divide on 0');
-                    result_field.value = "";
-                } else {
-                    result_field.value = divide(+first, +second).toString()+el.innerText
-                    console.log(first+operation+second)
-                    break;
-                }
-          }
+    } else if (two_number_operation(result_field.value) && el.innerText.match(/\=/)) { // если текущее выражение соответствует: число + операция + число И нажато =
+        result_field.value = calculate(result_field.value);
+    } else if (two_number_operation(result_field.value) && ['+', '-', '*', '/', 'pow'].includes(el.innerText)) { // если текущее выражение соответствует: число + операция + число И нажата операция
+        result_field.value = calculate(result_field.value, el.innerText);
     } else {
         result_field.value = result_field.value + el.innerText;
-
     }
-    
 }
 
